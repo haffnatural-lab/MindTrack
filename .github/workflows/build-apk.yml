@@ -28,10 +28,15 @@ jobs:
         run: |
           yes | sdkmanager --licenses || true
 
-      - name: Install Android SDK components
+      - name: Set Android SDK path
         run: |
-          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
-
+          echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
+          echo "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin" >> $GITHUB_PATH
+          echo "$ANDROID_SDK_ROOT/platform-tools" >> $GITHUB_PATH
+        name: Install Android SDK components
+        run: |
+          yes | "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --licenses
+           "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" "platform-tools" "platforms;android-35" "build-tools;35.0.0"
       - name: Build MindTrack APK
         run: |
           gradle assembleDebug
